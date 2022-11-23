@@ -71,6 +71,7 @@ int main()
     for(;startB <= finshinB;startB++){
         PUT(temps,temps[startB].coef,temps[startB].expon,&stratNEW);
     }
+    
     PRINT(temps,finshinB+1,stratNEW-1);
     return 0;
 }

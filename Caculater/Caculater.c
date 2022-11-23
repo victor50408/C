@@ -115,15 +115,15 @@ char *Equation_To_RPN(char *equation,char RPN[]){
 /*======================== Separate numbers and operator ==========================*/
     printf("Separate numbers and operator: ");
     for(int i=0;i<strlen(equation);i++){
-        if(equation[i]<'0' || equation[i]>'9'){   
-            ss[a][0]=equation[i];
+        if(equation[i]<'0' || equation[i]>'9'){ // if operator
+            ss[a][0]=equation[i]; // ss[] is string of operator or number
             ss[a][1]='\0';
             printf("%s ",ss[a]);
             a++;
-        }else{
+        }else{ // if number
             int counter0=0;
-            for(int j=i;equation[j]>='0' && equation[j]<='9';j++){
-                ss[a][counter0]=equation[j];
+            for(int j=i;equation[j]>='0' && equation[j]<='9';j++){ // assemble number: '1''2''3' to "123"
+                ss[a][counter0]=equation[j]; // ss[] is string of operator or number
                 counter0++;
                 i=j;
             }   
@@ -259,15 +259,15 @@ int find_wrong(char *Equation){
                 }
                 if(counter == 0){
                     return 1;
-                }
-                if(Equation[i+1]<'0' || Equation[i+1]>'9'){
-                    printf("!2!\n");
+                }/*
+                if((Equation[i+1]<'0' || Equation[i+1]>'9') && Equation[i+1]!='('){
+                    printf("!%c!\n",Equation[i+1]);
                     return 1;
                 }
                 if((Equation[i-1]<'0' || Equation[i-1]>'9') && i>0){
                     printf("!3!\n");
                     return 1;
-                }
+                }*/
             }
         }
     }
