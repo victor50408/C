@@ -137,8 +137,8 @@ int main(){
     printf("Equation : ");
     scanf("%s",Equation);
     EqToRPN(Equation);
-
-    printf("Infix : "); 
+    
+    printf("Posfix : "); 
     for(int i=0;Stack_RPN[i]!='X';i++){
         printf("%c ",Stack_RPN[i]);
     }

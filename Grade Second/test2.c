@@ -17,34 +17,21 @@ int is_Empty(char *flag){ // 1: is Empty  0: not Empty
 }
 
 int top_val(char *flag){ // return the top value of Stack
-    if(flag == "RPN"){
-        return Stack_RPN[top_RPN];
-    }else if (flag == "ANS"){
-        return Stack_ANS[top_ANS];
-    }else if (flag == "OP"){
-        return Stack_OP[top_OP];
-    }
+    if(flag == "RPN")       return Stack_RPN[top_RPN];
+    else if (flag == "ANS") return Stack_ANS[top_ANS];
+    else if (flag == "OP")  return Stack_OP[top_OP];
 }
 
 void push(char *flag,int x){
-    if(flag == "RPN"){
-        Stack_RPN[++top_RPN] = x;
-    }else if (flag == "ANS"){
-        Stack_ANS[++top_ANS] = x;
-    }else if (flag == "OP"){
-        Stack_OP[++top_OP] = x;
-    }
+    if(flag == "RPN")       Stack_RPN[++top_RPN] = x;
+    else if (flag == "ANS") Stack_ANS[++top_ANS] = x;
+    else if (flag == "OP")  Stack_OP[++top_OP] = x;
 }
 
 int pop(char *flag){
-    if(flag == "RPN"){
-       return Stack_RPN[top_RPN--];
-    }else if (flag == "ANS"){
-        return Stack_ANS[top_ANS--];
-    }else if (flag == "OP"){
-        return Stack_OP[top_OP--];
-    }
-
+    if(flag == "RPN")       return Stack_RPN[top_RPN--];
+    else if (flag == "ANS") return Stack_ANS[top_ANS--];
+    else if (flag == "OP")  return Stack_OP[top_OP--];
 }
 
 int Order(char s){
@@ -65,7 +52,7 @@ int square(int x,int s){
 void EqToRPN(char *Eq){ // Equation to Infix
     int pop_val,i=0;
     while(Eq[i] != '\0'){
-        int j,counter = 0,num = 0;
+        int j=i,num = 0;
         switch (Eq[i])
         {
         case '(':
@@ -84,18 +71,14 @@ void EqToRPN(char *Eq){ // Equation to Infix
             while(!is_Empty("OP") && Order(Eq[i]) <= Order(top_val("OP"))){ // in Stack_OP: if (input_val's order) <= (top_val's order) then pop all 
                 push("RPN",pop("OP"));
             }
+            if(Stack_RPN[i+1]=='-' || Stack_RPN[i+1]=='(')
             push("OP",Eq[i]);
             break;
         default: // number
-            if(Eq[i+1]>='0' && Eq[i+1]<='9'){
-                for(j=i;Eq[j]>='0' && Eq[j]<='9';j++) counter++;
-                for(int k=i;k<j;k++){
-                    num = num + (Eq[k]-'0')*square(10,j-k-1);
-                    //printf("~%d %d~\n",num,square(10,j-k-1));
-                }
-                //printf("!%d %d  %d %d!\n",num,counter,i,j);
-                //printf("!%d!\n",num);
-                push("RPN",num*100);
+            if(Eq[i+1]>='0' && Eq[i+1]<='9'){ // group the number ['1''0''0' to (int)100]
+                while(Eq[j]>='0' && Eq[j]<='9') j++;
+                for(int k=i;k<j;k++) num = num + (Eq[k]-'0')*square(10,j-k-1); // '1''0''0' = 1*100+0*10+0*1
+                push("RPN",num*100); // avoid ASCII code translate problem (if num=43,it's mean '+' in ASCII,not number;but num*100 is larger than '+''-'...) 
                 i=j;
                 continue;
             }else{
@@ -144,8 +127,7 @@ int ANS(){ // read data from Stack_RPN[] (https://www.youtube.com/watch?v=bx6Muc
             break;     
         default:
             if(Stack_RPN[i]>='0' && Stack_RPN[i]<='9') push("ANS",Stack_RPN[i]-'0');
-            else push("ANS",Stack_RPN[i]/100);
-            //printf("top : %d\n",top_val("ANS"));
+            else push("ANS",Stack_RPN[i]/100); //decode from *100
             break;
         }
         i++;
@@ -155,16 +137,20 @@ int ANS(){ // read data from Stack_RPN[] (https://www.youtube.com/watch?v=bx6Muc
 
 int main(){
     char Equation[MAX_SIZE];
-    printf("Equation : ");
-    scanf("%s",Equation);
-    EqToRPN(Equation);
 
-    printf("Infix : "); 
-    for(int i=0;Stack_RPN[i]!='X';i++){
-        printf("%d ",Stack_RPN[i]);
-    }
-    puts("");
-    printf("ANS = %d\n",ANS());
+    //while(1){
+        printf("Equation (press Q to quit): ");
+        scanf("%s",Equation);
+        //if(Equation[0] == 'Q' || Equation[0] == 'q') break;
+        EqToRPN(Equation);
+        printf("Infix : "); 
+        for(int i=0;Stack_RPN[i]!='X';i++){
+            printf("%d ",Stack_RPN[i]);
+        }
+        puts("");
+        printf("ANS = %d\n",ANS());   
+    //}
+
 
     system("pause");
 }
